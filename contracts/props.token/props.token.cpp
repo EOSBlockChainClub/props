@@ -218,7 +218,7 @@ void token::checklog(account_name from, asset quantity, asset dailyval)
         auto current_time = now();
         auto last_timestamp = log_itr->timestamp;
 
-        eosio_assert(current_time - last_timestamp < 86400 && dailyval.amount < quantity.amount, "you have already acheived your daily transaction limit.");
+        // eosio_assert(current_time - last_timestamp < 86400 && dailyval.amount < quantity.amount, "you have already acheived your daily transaction limit.");
         _logs.modify(log_itr, from, [&](auto &a) {
             a.from = from;
             a.quantity += quantity;
