@@ -1,20 +1,45 @@
 const { ApolloServer, gql } = require('apollo-server');
+const settings = require('./env.json');
 
   // This is a (sample) collection of books we'll be able to query
   // the GraphQL server for.  A more complete example might fetch
   // from an existing data source like a REST API or database.
   const users = [
     {
-      name: 'Tray Lewin'
+      name: 'Tray Lewin',
+      hashtags: [
+          {name: "HeckYeah", amount: 50},
+          {name: "MuchLove", amount: 100},
+          {name: "Atomic", amount: 500}
+      ]
     }
   ];
+
 
   // Type definitions define the "shape" of your data and specify
   // which ways the data can be fetched from the GraphQL server.
   const typeDefs = gql`
     type User {
-      name: String
+      name: String,
+      hashtags: [Hashtag],
+      transactions: [Transaction],
+      twitterName: String,
+      googleName: String,
+      facebookName: String
     }
+
+    type Hashtag {
+        name: String,
+        amount: Int
+    }
+
+    type Transaction {
+        dateTime: String,
+        fromAccount: String,
+        toAccount: String,
+        amount: Int
+    }
+
     type Query {
       users: [User]
     }
@@ -34,9 +59,9 @@ const { ApolloServer, gql } = require('apollo-server');
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    engine: process.env.ENGINE_API_KEY && {
-      apiKey: process.env.ENGINE_API_KEY,
-    },
+    // engine: settings.ENGINE_API_KEY && {
+    //   apiKey: settings.ENGINE_API_KEY,
+    // },
   });
 
   // This `listen` method launches a web-server.  Existing apps

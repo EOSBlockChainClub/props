@@ -1,0 +1,19 @@
+{
+  "name": "props-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "dependencies": {
+    "apollo-server": "^2.2.0",
+    "graphql": "^14.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
