@@ -1,3 +1,4 @@
+const settings = require('../../env.json');
 const eosjs = require('eosjs');
 const fetch = require('node-fetch'); // node only; not needed in browsers
 const {
@@ -5,19 +6,22 @@ const {
     TextEncoder
 } = require('text-encoding'); // node, IE11 and IE Edge Browsers
 
-const PROP_CONTRACT = "token.props"
+const PROP_CONTRACT = settings.CONTRACT_NAME
 
-const defaultPrivateKey = "5JEn8Y2hYREt5V4Q7Po4h3xQ8kWB7ksKvdUS7NJScbXbyNiFruS";
-const tokenPropPrivatekey = "5KEArEq9ydqtPXcAMWvzqavkVcHd6KrpLHkyLJuRX8VBHUMu96X" // token.props
-const tokenPropAutoPayKey = "5HrsefDd577dRS8y6Pj6QuLvfZgbNsoWhqefmqXo5VdKKWeM8KV"
-const signatureProvider = new eosjs.JsSignatureProvider([defaultPrivateKey, tokenPropPrivatekey, tokenPropAutoPayKey]);
+const signatures = [
+    settings.PROPS_PRIVATE_KEY,
+    settings.TOKEN_PROPS_PRIVATE_KEY,
+    settings.TOKEN_PROPS_AUTO_PAY_KEY
+]
 
-const rpc = new eosjs.JsonRpc('http://127.0.0.1:8888', {
+const signatureProvider = new eosjs.JsSignatureProvider(signatures);
+
+const rpc = new eosjs.JsonRpc(settings.EOS_NETWORK_URI, {
     fetch
 });
 
 const eos = new eosjs.Api({
-    chainId: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f",
+    chainId: settings.EOS_CHAIN_ID,
     rpc,
     signatureProvider,
     textEncoder: new TextEncoder(),

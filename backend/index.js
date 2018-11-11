@@ -1,5 +1,7 @@
+import Mongo from './services/mongo/schema';
+import { findMongo, findOneMongo, inMongo } from './services/mongo/resolvers';
 import {searchTweets, processTwitterTransfers} from './services/twitter/resolvers';
-
+import { connect } from './services/mongo/connectors';
 const { ApolloServer, gql } = require('apollo-server');
 const settings = require('./env.json');
 
@@ -8,6 +10,7 @@ const settings = require('./env.json');
   // from an existing data source like a REST API or database.
   const users = [
     {
+      _id:'123456',
       name: 'Tray Lewin',
       transactions: [
         {
@@ -25,7 +28,6 @@ const settings = require('./env.json');
       ]
     }
   ];
-
 
   // Type definitions define the "shape" of your data and specify
   // which ways the data can be fetched from the GraphQL server.
@@ -72,7 +74,8 @@ const settings = require('./env.json');
       searchTweets: (_, args, context) => { return searchTweets(args, context); },
       // getTwitterData: (_, args, context) => { return getTwitterData(args, context); },
       processTwitterTransfers: (_, args, context) => { return processTwitterTransfers(args, context); },
-      users: () => users,
+      // users: () => users,
+      users: (_, args, context) => { return findMongo(args, context, Mongo.User); },
     },
   };
 
@@ -86,6 +89,9 @@ const settings = require('./env.json');
     //   apiKey: settings.ENGINE_API_KEY,
     // },
   });
+
+  // Mongo
+  connect(settings.MONGO_URI);
 
   // This `listen` method launches a web-server.  Existing apps
   // can utilize middleware options, which we'll discuss later.
