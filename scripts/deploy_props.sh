@@ -17,6 +17,9 @@
 	#cleos
 	cleos="cleos -u $eosnode"
 
+	#to run from docker
+	#cleosdeploy="docker exec -it eosio /opt/eosio/bin/cleos --url http://127.0.0.1:8888 --wallet-url http://127.0.0.1:5555"
+	
 	# usefull functions
 	generateKeys() {
 		export keys=`cleos create key`
