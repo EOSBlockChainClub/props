@@ -66,7 +66,7 @@ async function createhash(accountName, hashtag, quantity, permission) {
 }
 
 //  cleos push action token.props propup '["token.props","test2.props","giveme9"]' -p token.props
-async function propup(sender, reciever, hashtag, permission = "autopay") {
+async function propup(sender, reciever, hashtag, permission = "active") {
     return transact([{
         account: PROP_CONTRACT,
         name: 'propup',
@@ -113,6 +113,12 @@ async function getHashes(accountName) {
     results = await eos.rpc.get_table_rows(parameters);
     return results.rows[0];
 }
-createhash("token.props", "giveme60", 60, "active")
-propup("token.props", "test2.props", "giveme10", "autopay")
-getHashes("token.props")
+// createhash("token.props", "giveme60", 60, "active")
+// propup("token.props", "test2.props", "giveme10", "autopay")
+// getHashes("token.props")
+
+module.exports = {
+    createhash,
+    propup,
+    getHashes
+}
