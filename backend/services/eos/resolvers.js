@@ -7,7 +7,7 @@ const {
 } = require('text-encoding'); // node, IE11 and IE Edge Browsers
 
 const PROP_CONTRACT = settings.CONTRACT_NAME
-
+const PROP_SYMBOL = settings.TOKEN_SYMBOL
 const signatures = [
     settings.PROPS_PRIVATE_KEY,
     settings.TOKEN_PROPS_PRIVATE_KEY,
@@ -38,7 +38,7 @@ function transact(actions, blocksBehind = 3, expireSeconds = 30) {
 }
 
 // cleos get currency balance token.props test1.props PROP
-async function getBalance(accountName, tokenSymbol, contractName) {
+async function getBalance(accountName, tokenSymbol = PROP_SYMBOL, contractName) {
     const balance = await eos.rpc.get_currency_balance(contractName, accountName, tokenSymbol);
     if (balance && balance[0]) {
         return parseFloat(balance[0].split(tokenSymbol)[0]);
@@ -48,6 +48,8 @@ async function getBalance(accountName, tokenSymbol, contractName) {
 
 // cleos push action token.props createhash '["token.props","prop10","20.0000 PROP"]' -p token.props
 async function createhash(accountName, hashtag, quantity, permission) {
+    const amount = quantity.toString().concat(" ", PROP_SYMBOL)
+
     return transact([{
         account: PROP_CONTRACT,
         name: 'createhash',
@@ -58,7 +60,7 @@ async function createhash(accountName, hashtag, quantity, permission) {
         data: {
             from: accountName,
             hashtag,
-            quantity
+            quantity: amount
         },
     }]);
 }
@@ -81,7 +83,8 @@ async function propup(sender, reciever, hashtag, permission = "autopay") {
 }
 
 // set per transaction limit
-async function setTransactionLimit(sender, amount, permission = "active") {
+async function setTransactionLimit(sender, quantity, permission = "active") {
+    const amount = quantity.toString().concat(" ", PROP_SYMBOL)
     return transact([{
         account: PROP_CONTRACT,
         name: 'settrxlimit',
@@ -110,6 +113,6 @@ async function getHashes(accountName) {
     results = await eos.rpc.get_table_rows(parameters);
     return results.rows[0];
 }
-createhash("token.props", "giveme10", "10.0000 PROP", "active")
+createhash("token.props", "giveme60", 60, "active")
 propup("token.props", "test2.props", "giveme10", "autopay")
 getHashes("token.props")
