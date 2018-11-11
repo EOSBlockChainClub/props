@@ -1,6 +1,7 @@
 import {twit} from './connectors';
 import base64 from 'base-64';
-import {isNullOrEmpty} from '../../../utils';
+import {isNullOrEmpty, now} from '../../../utils';
+import Mongo from '../mongo/schema';
 import {findMongo, findOneMongo, upsertMongo} from '../mongo/resolvers';
 
 export async function searchTwitter(searchString, count = 1) {
@@ -13,27 +14,13 @@ export async function searchTwitter(searchString, count = 1) {
     }
 }
 
-// // TODO: We need to get twitter screen name for searching replies for comment
-// // we can get it on login time and save it in user identities data
-// export async function getTwitterData(args, context) {
-//   var {twitterId} = args;
-  
-//   try{
-//     //get twitter user's id
-//     // console.log(twitterName);
-//     // const response = await twit.get('search', { q: twitterName });
-//     // console.log(response.data);
-//     const user_id = twitterId.replace(/\D/g,'');
-//     console.log(user_id);
-//     response = await twit.get('users/lookup', { user_id});
-//     console.log(response);
-//     const data = response.data[0];
-//     console.log(data);
-//     return JSON.stringify(data);
-//   }catch (error) {
-//     console.log(`Error getting Twitter `, Error);
-//   }
-// }
+//Poll twitter transfers every nn seconds
+export async function startTwitterPolling(searchString, twitterName, count) {
+  //set up a timer to poll 
+  // pollInterval = settings.TwitterPollIntervalInMs;
+  const args = {searchString, twitterName, count}
+  // call processTwitterTransfers(args, context) every nn ms
+}
 
 //Twitter
 export async function searchTweets(args, context) {
@@ -77,7 +64,8 @@ export async function processTwitterTransfers(args, context) {
     const firstSendHashtag = (t.entities.hashtags || []).filter(h => h.text.toLowerCase().includes('send'));
     const text = firstSendHashtag.length ? firstSendHashtag[0].text : '';
     const amount = text ? text.match(/\d+$/)[0] : '';
-    var tweetData =  {
+
+    var metadata =  {
       originalTweetId : t.id_str,
       responseTweetId : t.in_reply_to_status_id_str,
       twitterNameTo : t.in_reply_to_screen_name,
@@ -88,7 +76,25 @@ export async function processTwitterTransfers(args, context) {
       profile_image : t.user.profile_image_url_https,
       created_at : t.created_at
     };
-    // tweetData.hashId = base64.encode(tweetData);  //unique hash based for this transfer
+
+    const userId = "123456";
+    const fromuserEosAccount = "xxxxxxxxxx";
+    const toUserEosAccount = "yyyyyyyyy";
+
+    var tweetData =  {
+      _id: base64.encode(tweetData), 
+      userId: userId,
+      action: "send",
+      actionDatetime: now(),
+      platform: "twitter",
+      hashtag: text,
+      fromAccount: fromuserEosAccount,
+      toAccount: toUserEosAccount,
+      amount: amount,
+      created_at : t.created_at,
+      metadata: metadata
+    };
+
     return tweetData;
   })
  
@@ -104,66 +110,10 @@ export async function processTwitterTransfers(args, context) {
 
 export async function saveTransfer(data, context) {
   //TODO: Save to database
+  const response = await upsertMongo(context, Mongo.Transaction, data);
   console.log(data);
   return 1;
 }
-
-
-// // input: {action, metadata, userId}
-// //         - userId - should only be set if craeting an action for a user other than the one logged-in
-// //         - metadata - (optional) stringified object stored as additional data with the action
-// //         - action - string name of action
-// // actionOnlyRecordedOnce - will only create one useraction of this type (per user)
-// // ignoreDuplicates - if the user, action, and metadata are all the same, action isn't recorded
-
-// export async function createUserAction(args, context, returnUserAction = false, actionOnlyRecordedOnce = false, ignoreDuplicates = false) {
-//   try {
-//     var {input} = args;
-//     input.metadata = (input.metadata || {});
-//     // metadata is a serialized string if coming via graphql endpoint
-//     if (isAString(input.metadata)) {
-//       input.metadata = JSON.parse(input.metadata);
-//     }
-
-//     var userId = null;
-//     // If user is missing from context (a new user)
-//     if(!context.user || !context.user._id) {
-//       context.user = {_id: input.userId}; //might be null
-//     }
-//     //if userId is passed-in, use it - used for 1) adding referral bonus to referring user and 2) adding new user
-//     if(input.userId) {
-//       userId = input.userId;
-//     }
-//     else {
-//       userId = context.user._id;
-//     }
-//     input.userId = userId; //save to userAction
-
-//     //if an action of this type already exists for this user - don't create another
-//     if(actionOnlyRecordedOnce == true) {
-//       const actionExists = await findOneMongo(context, Mongo.UserAction, {userId, action:input.action});
-//       if(!isNullOrEmpty(actionExists)) {
-//         return composeResult(false, 0);
-//       }
-//     }
-
-//     input.metadata = JSON.stringify(input.metadata); //stringify for storage in the database as a string
-//     //if a duplicate of this action exists (all values including metadata) - don't create another
-//     if(ignoreDuplicates == true) {
-//       const actionExists = await findOneMongo(context, Mongo.UserAction, {userId, action:input.action, metadata:input.metadata});
-//       if(!isNullOrEmpty(actionExists)) {
-//         return composeResult(false, 0);
-//       }
-//     }
-
-//     const response = await upsertMongo(context, Mongo.UserAction, input, returnUserAction);
-//     return response;
-//   }
-//   catch (error) {
-//     logAndThrowError(`problem in createUserAction`, error);
-//   }
-// }
-
 
 export function composeResult(success, modifiedCount, errorCode, id) {
   let result = {success, modifiedCount};
