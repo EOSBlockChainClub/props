@@ -47,7 +47,7 @@ const settings = require('./env.json');
     type Query {
       searchTweets (searchString:String, twitterName:String, count:Int) : String
       processTwitterTransfers (searchString:String, twitterName:String, count:Int) : Result
-      transactions: [Transaction]
+      transactions  (userId:String): [Transaction]
       users: [User]
     }
   `;
