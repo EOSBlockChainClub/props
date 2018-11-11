@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "apollo-server": "^2.2.0",
-    "graphql": "^14.0.2"
+    "esm": "^3.0.84",
+    "graphql": "^14.0.2",
+    "twit": "^2.2.11"
   },
   "devDependencies": {},
   "scripts": {

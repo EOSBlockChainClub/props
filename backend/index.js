@@ -1,3 +1,5 @@
+import {getTwitterData, searchTweets} from './services/twitter/resolvers';
+
 const { ApolloServer, gql } = require('apollo-server');
 const settings = require('./env.json');
 
@@ -7,6 +9,15 @@ const settings = require('./env.json');
   const users = [
     {
       name: 'Tray Lewin',
+      transactions: [
+        {
+
+        }
+      ],
+      twitterName: 'oretest1',
+      twitterId: '1033845090907697152',
+      googleName: 'traylewin',
+      facebookName: 'tray.lewin',
       hashtags: [
           {name: "HeckYeah", amount: 50},
           {name: "MuchLove", amount: 100},
@@ -33,6 +44,13 @@ const settings = require('./env.json');
         amount: Int
     }
 
+    type Result {
+      success: Boolean!
+      modifiedCount: Int
+      _id: String          
+      errorCode: String
+    }
+
     type Transaction {
         dateTime: String,
         fromAccount: String,
@@ -41,6 +59,9 @@ const settings = require('./env.json');
     }
 
     type Query {
+      getTwitterData (twitterId:String) : String
+      searchTweets (searchString:String, twitterName:String, count:Int) : String
+      processTwitterTransfers (searchString:String, count:Int) : Result
       users: [User]
     }
   `;
@@ -49,6 +70,9 @@ const settings = require('./env.json');
   // schema.  We'll retrieve books from the "books" array above.
   const resolvers = {
     Query: {
+      searchTweets: (_, args, context) => { return searchTweets(args, context); },
+      getTwitterData: (_, args, context) => { return getTwitterData(args, context); },
+      processTwitterTransfers: (_, args, context) => { return processTwitterTransfers(args, context); },
       users: () => users,
     },
   };
