@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'app/styles//fonts.scss';
+@import 'app/styles/container.scss';
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+body {
+  font-family: 'Nunito';
+  margin: 0;
+}
+
+.button-prps {
+  border-radius: 100px;
+  border: 2px solid #87b3ac;
+  padding: 4px 20px;
+  display: inline-block;
+  font-size: 15px;
+}
+
+.button-reset {
+  line-height: normal!important;
+  border-radius: 0;
+  min-width: 0;
+  font-size: inherit;
+}
+
+.gradient-cool-to-bottom {
+  background: linear-gradient(to bottom, #f715ff 0%,#1cf0cb 100%);
+}

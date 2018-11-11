@@ -1,0 +1,58 @@
+:host {
+  header {
+    text-align: center;
+    .image {
+      height: 420px;
+      width: 100%;
+      padding: 100px 0;
+      background: url('/assets/Swoop.svg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: top center;
+    }
+    h1 {
+      font-size: 67px;
+      .hash {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 1.7em;
+        line-height: .8;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      margin-bottom: 20px;
+    }
+    h2 {
+      margin: 0 auto;
+      margin-top: 0;
+      max-width: 350px;
+      font-size: 25px;
+      font-weight: normal;
+      color: #eee;
+    }
+  }
+  .buttons {
+    margin-top: 30px;
+    img {
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 13px;
+    }
+    span {
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .button {
+    }
+  }
+  .social-button {
+    border-radius: 100px;
+    color: white;
+    padding: 15px 40px;
+    display: inline-block;
+    &.google {
+      background: #df4a32;
+    }
+    box-shadow: 0 2px 15px #666;
+  }
+}

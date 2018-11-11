@@ -1,0 +1,51 @@
+<div id="dashboard">
+  <div class="container-md">
+      <div class="dash-module">
+          <h2>
+              My Props
+          </h2>
+          <table mat-table [dataSource]="myProps">
+              <ng-container matColumnDef="hashtag">
+                <th mat-header-cell *matHeaderCellDef>Hashtag</th>
+                <td mat-cell *matCellDef="let item"> {{item.hashtag}} </td>
+              </ng-container>
+              <ng-container matColumnDef="platform">
+                <th mat-header-cell *matHeaderCellDef>Receive Amount</th>
+                <td mat-cell *matCellDef="let item"> {{item.receiveAmount}} </td>
+              </ng-container>
+              <ng-container matColumnDef="acceptedPlatforms">
+                <th mat-header-cell *matHeaderCellDef>Accepted Platforms</th>
+                <td mat-cell *matCellDef="let item"> {{item.acceptedPlatforms}} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumnsMyProps"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumnsMyProps;"></tr>
+          </table>
+        </div>
+
+      <div class="dash-module">
+        <h2>
+          Earned Props
+        </h2>
+        <table mat-table [dataSource]="earnedProps">
+            <ng-container matColumnDef="from">
+              <th mat-header-cell *matHeaderCellDef>From</th>
+              <td mat-cell *matCellDef="let item"> {{item.from}} </td>
+            </ng-container>
+            <ng-container matColumnDef="platform">
+              <th mat-header-cell *matHeaderCellDef>Platform</th>
+              <td mat-cell *matCellDef="let item"> {{item.platform | titlecase}} </td>
+            </ng-container>
+            <ng-container matColumnDef="amountReceived">
+              <th mat-header-cell *matHeaderCellDef>Amount Received</th>
+              <td mat-cell *matCellDef="let item"> {{item.amountReceived}} PRPS</td>
+            </ng-container>
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef>Date</th>
+              <td mat-cell *matCellDef="let item"> {{item.date | timeAgo}} </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+    </div>
+  </div>

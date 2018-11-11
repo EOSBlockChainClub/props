@@ -1,0 +1,51 @@
+$mat-xxs: screen and (max-width: 399px);
+$mat-xs: screen and (min-width: 400px) and (max-width: 599px);
+$mat-sm: screen and (min-width: 600px) and (max-width: 959px);
+$mat-md: screen and (min-width: 960px) and (max-width: 1279px);
+$mat-lg: screen and (min-width: 1280px) and (max-width: 1919px);
+$mat-xl: screen and (min-width: 1920px) and (max-width: 5000px);
+$mat-lt-sm: screen and (max-width: 599px);
+$mat-lt-md: screen and (max-width: 959px);
+$mat-lt-lg: screen and (max-width: 1279px);
+$mat-lt-xl: screen and (max-width: 1919px);
+$mat-gt-xxs: screen and (min-width: 399px);
+$mat-gt-xs: screen and (min-width: 600px);
+$mat-gt-sm: screen and (min-width: 960px);
+$mat-gt-md: screen and (min-width: 1280px);
+$mat-gt-xl: screen and (min-width: 1920px);
+
+@mixin gt($media) {
+  @if $media == "xxs" {
+    @media only #{$mat-gt-xxs} { @content; }
+  }
+  @if $media == "xs" {
+    @media only #{$mat-gt-xs} { @content; }
+  }
+  @else if $media == "sm" {
+    @media only #{$mat-gt-sm} { @content; }
+  }
+  @else if $media == "md" {
+    @media only #{$mat-gt-md} { @content; }
+  }
+  @else if $media == "lg" {
+    @media only #{$mat-gt-xl} { @content; }
+  }
+}
+
+@mixin respond-to($media) {
+  @if $media == "xxs" {
+    @media only #{$mat-xxs} { @content; }
+  }
+  @if $media == "xs" {
+    @media only #{$mat-xs} { @content; }
+  }
+  @else if $media == "sm" {
+    @media only #{$mat-sm} { @content; }
+  }
+  @else if $media == "md" {
+    @media only #{$mat-md} { @content; }
+  }
+  @else if $media == "lg" {
+    @media only #{$mat-lg} { @content; }
+  }
+}

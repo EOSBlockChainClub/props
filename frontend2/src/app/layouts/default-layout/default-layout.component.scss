@@ -1,0 +1,79 @@
+@import 'media';
+:host {
+  flex-direction: column;
+  box-sizing: border-box;
+  display: flex;
+  place-content: stretch flex-start;
+  align-items: stretch;
+  flex: 1 1 100%;
+
+  footer {
+    padding: 60px 0;
+    color: white;
+    .social-links {
+      a {
+        padding: 5px 0px;
+      }
+      svg, span {
+        vertical-align: middle;
+      }
+    }
+    .extra-links {
+      a {
+        padding: 5px 0px;
+      }
+      svg, span {
+        vertical-align: middle;
+      }
+    }
+    .legal {
+      a {
+        font-size: 14px;
+        padding: 5px 0;
+      }
+    }
+    .contact {
+      line-height: 1.5;
+      padding: 20px 0 20px 0;
+      @include gt(sm) {
+        padding: 10px 0 50px 0;
+      }
+    }
+    .branding {
+      padding-top: 20px;
+      @include gt(sm) {
+        padding-top: 0;
+      }
+      .copyright {
+        font-size: 14px;
+      }
+      .brand {
+        padding: 10px 0;
+        @include gt(sm) {
+          padding-bottom: 50px;
+        }
+        .brand-text {
+          font-weight: bold;
+        }
+      }
+      img, span {
+        vertical-align: middle;
+      }
+    }
+    background-image: linear-gradient(141deg,#FF867E 0,#FFAA6C 27%,#FFA876 52%,#FE906A 73%,#FF837D 100%);
+    a {
+      text-decoration: none;
+      font-weight: bold;
+      color: white;
+    }
+    svg {
+      vertical-align: middle;
+      fill: white;
+    }
+    .legal {
+      a {
+        font-weight: normal;
+      }
+    }
+  }
+}
