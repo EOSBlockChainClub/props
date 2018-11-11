@@ -2,6 +2,15 @@
  *  @file
  *  @copyright defined in eos/LICENSE.txt
  */
+/**
+ *  @file
+ *  @copyright defined in eos/LICENSE.txt
+ */
+
+/**
+ *  Following contract adheres to eosio.token standards. 
+ * It copies all the functionalities of eosio.token. In addition to that, it implements functiosn such as propup and creathash
+ */
 
 #include "props.token.hpp"
 
@@ -60,6 +69,31 @@ void token::issue(account_name to, asset quantity, string memo)
     }
 }
 
+void token::retire(asset quantity, string memo)
+{
+    auto sym = quantity.symbol;
+    eosio_assert(sym.is_valid(), "invalid symbol name");
+    eosio_assert(memo.size() <= 256, "memo has more than 256 bytes");
+
+    auto sym_name = sym.name();
+    stats statstable(_self, sym_name);
+    auto existing = statstable.find(sym_name);
+    eosio_assert(existing != statstable.end(), "token with symbol does not exist");
+    const auto &st = *existing;
+
+    require_auth(st.issuer);
+    eosio_assert(quantity.is_valid(), "invalid quantity");
+    eosio_assert(quantity.amount > 0, "must retire positive quantity");
+
+    eosio_assert(quantity.symbol == st.supply.symbol, "symbol precision mismatch");
+
+    statstable.modify(st, 0, [&](auto &s) {
+        s.supply -= quantity;
+    });
+
+    sub_balance(st.issuer, quantity);
+}
+
 void token::transfer(account_name from,
                      account_name to,
                      asset quantity,
@@ -84,6 +118,130 @@ void token::transfer(account_name from,
     add_balance(to, quantity, from);
 }
 
+void token::createhash(string hashtag, asset quantity)
+{
+    hash_table _hashtags(_self, _self);
+
+    auto itr = _hashtags.find(hashStr(hashtag));
+
+    eosio_assert(itr == _hashtags.end(), "This hashtag already exists.");
+
+    _hashtags.emplace(_self, [&](auto &a) {
+        a.hashtag_hash = hashStr(hashtag);
+        a.balance = quantity;
+    });
+}
+
+// sets per transaction limit
+void token::settrxlimit(account_name from, asset quantity)
+{
+    require_auth(from);
+
+    trx_limit _limit(_self, _self);
+
+    auto itr = _limit.find(from);
+
+    if (itr == _limit.end())
+    {
+        _limit.emplace(_self, [&](auto &a) {
+            a.owner = from;
+            a.balance = quantity;
+        });
+    }
+    else
+    {
+        _limit.modify(itr, from, [&](auto &a) {
+            a.owner = from;
+            a.balance = quantity;
+        });
+    }
+}
+
+// sets daily limit for the transactions
+void token::setlimit(account_name from, asset quantity)
+{
+    require_auth(from);
+
+    daily_limit _limit(_self, _self);
+
+    auto itr = _limit.find(from);
+
+    if (itr == _limit.end())
+    {
+        _limit.emplace(_self, [&](auto &a) {
+            a.owner = from;
+            a.daily = quantity;
+        });
+    }
+    else
+    {
+        _limit.modify(itr, from, [&](auto &a) {
+            a.owner = from;
+            a.daily = quantity;
+        });
+    }
+}
+
+// log transactions
+void token::checklog(account_name from, asset quantity, asset dailyval)
+{
+    log_table _logs(_self, _self);
+    auto log_itr = _logs.find(from);
+    if (log_itr == _logs.end())
+    {
+        _logs.emplace(_self, [&](auto &a) {
+            a.from = from;
+            a.quantity = quantity;
+            a.timestamp = now();
+        });
+    }
+    else
+    {
+        auto current_time = now();
+        auto last_timestamp = log_itr->timestamp;
+
+        eosio_assert(!(current_time - last_timestamp < 86400 && dailyval.amount < quantity.amount), "you have already acheived your daily transaction limit.");
+        _logs.modify(log_itr, from, [&](auto &a) {
+            a.from = from;
+            a.quantity += quantity;
+            a.timestamp = now();
+        });
+    }
+}
+
+void token::propup(account_name from, account_name to, string hashtag)
+{
+    require_auth(from);
+
+    asset dailyval = asset(10000, symbol_type(S(4, PROP)));
+    hash_table _hashtags(_self, _self);
+    auto itr = _hashtags.find(hashStr(hashtag));
+    eosio_assert(itr != _hashtags.end(), "This hashtag is not registered by any user.");
+
+    auto quantity = itr->balance;
+
+    trx_limit _limit(_self, _self);
+    auto limit_itr = _limit.find(from);
+    if (limit_itr != _limit.end())
+    {
+        auto limit = limit_itr->balance;
+        eosio_assert(limit > quantity, "The amount you are trying to transfer is more than the auto pay limit set by you.");
+    };
+
+    daily_limit _dailylimit(_self, _self);
+    auto daily_itr = _dailylimit.find(from);
+
+    if (daily_itr != _dailylimit.end())
+    {
+        dailyval = daily_itr->daily;
+    }
+
+    token::checklog(from, quantity, dailyval);
+
+    token::transfer(from, to, quantity, "transfer the hashtag ammount");
+}
+
+// eosio.token standard sub_balance function
 void token::sub_balance(account_name owner, asset value)
 {
     accounts from_acnts(_self, owner);
@@ -98,6 +256,26 @@ void token::sub_balance(account_name owner, asset value)
     else
     {
         from_acnts.modify(from, owner, [&](auto &a) {
+            a.balance -= value;
+        });
+    }
+}
+
+// It is used by transfer_from account to specify the RAM payer as the "sender" account and not the "owner" account as in the sub_balance function
+void token::sub_balance_from(account_name sender, account_name owner, asset value)
+{
+    accounts from_acnts(_self, owner);
+
+    const auto &from = from_acnts.get(value.symbol.name(), "no balance object found");
+    eosio_assert(from.balance.amount >= value.amount, "overdrawn balance");
+
+    if (from.balance.amount == value.amount)
+    {
+        from_acnts.erase(from);
+    }
+    else
+    {
+        from_acnts.modify(from, sender, [&](auto &a) {
             a.balance -= value;
         });
     }
@@ -123,4 +301,4 @@ void token::add_balance(account_name owner, asset value, account_name ram_payer)
 
 } // namespace eosio
 
-EOSIO_ABI(eosio::token, (create)(issue)(transfer))
+EOSIO_ABI(eosio::token, (create)(issue)(transfer)(createhash)(checklog)(settrxlimit)(setlimit)(propup)(retire))
