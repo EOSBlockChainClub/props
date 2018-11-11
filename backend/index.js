@@ -1,4 +1,4 @@
-import {getTwitterData, searchTweets} from './services/twitter/resolvers';
+import {searchTweets, processTwitterTransfers} from './services/twitter/resolvers';
 
 const { ApolloServer, gql } = require('apollo-server');
 const settings = require('./env.json');
@@ -59,9 +59,8 @@ const settings = require('./env.json');
     }
 
     type Query {
-      getTwitterData (twitterId:String) : String
       searchTweets (searchString:String, twitterName:String, count:Int) : String
-      processTwitterTransfers (searchString:String, count:Int) : Result
+      processTwitterTransfers (searchString:String, twitterName:String, count:Int) : Result
       users: [User]
     }
   `;
@@ -71,7 +70,7 @@ const settings = require('./env.json');
   const resolvers = {
     Query: {
       searchTweets: (_, args, context) => { return searchTweets(args, context); },
-      getTwitterData: (_, args, context) => { return getTwitterData(args, context); },
+      // getTwitterData: (_, args, context) => { return getTwitterData(args, context); },
       processTwitterTransfers: (_, args, context) => { return processTwitterTransfers(args, context); },
       users: () => users,
     },
