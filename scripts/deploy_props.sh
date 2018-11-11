@@ -97,8 +97,8 @@
 		echo "-----> Step 2b - install eosio.token and eosio.msig contracts".
 		echo
 	    #install our standard token contract to be used as eosio.token
-		$cleos set contract eosio.token $eospath/build/contracts/eosio.token
-		$cleos set contract eosio.msig  $eospath/build/contracts/eosio.msig
+		$cleos set contract eosio.token $proppath/build/contracts/eosio.token
+		$cleos set contract eosio.msig  $proppath/build/contracts/eosio.msig
 		echo
 		echo "-----> Step 2c - initial funding of SYS for chain".
 		echo
@@ -108,7 +108,7 @@
 		echo "-----> Step 2d - set system contract".
 		echo
 		sleep 2  #delay to let transactions complete
-		$cleos set contract eosio $eospath/build/contracts/eosio.system
+		$cleos set contract eosio $proppath/build/contracts/eosio.system
 		sleep 2  #delay to let transactions complete
 	}
 

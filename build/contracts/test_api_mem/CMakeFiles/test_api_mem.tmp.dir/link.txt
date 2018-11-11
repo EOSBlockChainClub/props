@@ -1,0 +1,1 @@
+/usr/local/bin/clang++   -Wall -Wno-deprecated-declarations -O3 -DNDEBUG -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/test_api_mem.tmp.dir/test_api_mem.cpp.o  -o test_api_mem.tmp 

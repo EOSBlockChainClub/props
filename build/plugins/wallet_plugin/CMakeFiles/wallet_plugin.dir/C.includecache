@@ -1,0 +1,12 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/surabhilodha/code/eos/plugins/wallet_plugin/macos_user_auth.m
+LocalAuthentication/LocalAuthentication.h
+-
+
