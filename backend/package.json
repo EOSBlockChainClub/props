@@ -9,6 +9,7 @@
   "dependencies": {
     "apollo-server": "^2.2.0",
     "base-64": "^0.1.0",
+    "eosjs": "^20.0.0-beta2",
     "esm": "^3.0.84",
     "graphql": "^14.0.2",
     "mongoose": "^5.3.11",
