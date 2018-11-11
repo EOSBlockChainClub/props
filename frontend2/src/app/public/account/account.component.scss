@@ -1,0 +1,8 @@
+:host {
+  display: block;
+  ::ng-deep {
+    .mat-drawer-content {
+      background: #f3fafa;
+    }
+  }
+}

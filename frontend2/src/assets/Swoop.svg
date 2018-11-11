@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1440" height="548" viewBox="0 0 1440 548">
+  <defs>
+    <linearGradient id="swoop-b" x1="50%" x2="50%" y1="100%" y2="0%">
+      <stop offset="0%" stop-color="#2685BC"/>
+      <stop offset="100%" stop-color="#95D7CC"/>
+    </linearGradient>
+    <path id="swoop-a" d="M119,114 L1559,114 L1559,569 C1201.68396,630.708333 921.160527,661.5625 717.429687,661.5625 C513.698848,661.5625 314.222285,630.708333 119,569 L119,114 Z"/>
+    <linearGradient id="swoop-c" x1="58.45%" x2=".927%" y1="1.129%" y2="58.633%">
+      <stop offset="0%" stop-color="#FFF"/>
+      <stop offset="100%" stop-color="#FFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <g fill="none" fill-rule="evenodd" transform="translate(-119 -114)">
+    <mask id="swoop-d" fill="#fff">
+      <use xlink:href="#swoop-a"/>
+    </mask>
+    <use fill="url(#swoop-b)" fill-rule="nonzero" xlink:href="#swoop-a"/>
+    <g fill="url(#swoop-c)" fill-rule="nonzero" mask="url(#swoop-d)">
+      <g transform="translate(0 110)">
+        <polygon points="116.333 0 440.807 0 375.474 454.674 51 454.674" opacity=".2"/>
+        <polygon points="439.679 4 775.807 4 708.127 475.674 372 475.674" opacity=".104"/>
+        <polygon points="67.679 255 403.807 255 336.127 726.674 0 726.674" opacity=".2"/>
+        <polygon points="386.679 375 722.807 375 655.127 846.674 319 846.674" opacity=".104"/>
+      </g>
+      <g opacity=".5" transform="translate(688)">
+        <polygon points="116.333 0 440.807 0 375.474 454.674 51 454.674" opacity=".2"/>
+        <polygon points="439.679 4 775.807 4 708.127 475.674 372 475.674" opacity=".356"/>
+        <polygon points="761.679 104 1097.807 104 1030.127 575.674 694 575.674" opacity=".8"/>
+        <polygon points="67.679 255 403.807 255 336.127 726.674 0 726.674" opacity=".2"/>
+        <polygon points="386.679 375 722.807 375 655.127 846.674 319 846.674" opacity=".356"/>
+        <polygon points="705.679 495 1041.807 495 974.127 966.674 638 966.674" opacity=".8"/>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,52 @@
+:host {
+  ::ng-deep {
+    td {
+      border: 0!important;
+      font-family: Nunito;
+      font-size: 16px;
+    }
+    .mat-header-cell {
+      font-weight: bold;
+      color: black;
+    }
+  }
+  .dash-module {
+    margin-bottom: 60px;
+  }
+  h2 {
+    letter-spacing: 1px;
+    font-size: 28px;
+  }
+  .card {
+    padding: 30px;
+    background: white;
+    box-shadow: 0 0 14px #eee;
+    border-radius: 6px;
+    .row.header {
+      font-weight: bold;
+      font-size: 17px;
+      letter-spacing: 1px;
+    }
+    .row {
+      margin: 17px 0;
+    }
+  }
+  .add-new-button {
+    width: 18px;
+    height: 18px;
+    border-radius: 100px;
+    font-size: 16px;
+    line-height: 18px;
+    text-align: center;
+    border: 1px solid #95D7CC;
+    color: #95D7CC;
+  }
+  .add-new-button-text {
+    font-weight: bold;
+    margin-left: 12px;
+  }
+  table {
+    width: 100%;
+    box-shadow: 0 3px 20px 0 #d9f0ed;
+  }
+}

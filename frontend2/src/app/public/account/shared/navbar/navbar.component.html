@@ -1,0 +1,42 @@
+<div id="account-navbar">
+  <div class="container-xl">
+    <div class="container-xl" fxLayout="row" fxLayoutAlign="start center">
+        <a class="brand" [routerLink]="'/'">
+          <span class="hash">
+            #
+          </span>
+          propsAF
+        </a>
+        <div class="buttons" fxLayoutAlign="row" fxFlex fxLayoutAlign="space-between center">
+          <div class="buttons-nav" fxLayoutAlign="row">
+              <button mat-button class="button-reset button" [routerLink]="'/account/dashboard'" [routerLinkActive]="'active'">
+                Earn Props
+              </button>
+              <button mat-button class="button-reset button" [routerLink]="'/account/sent-props'" [routerLinkActive]="'active'">
+                Sent Props
+              </button>
+              <button mat-button class="button-reset button" [routerLinkActive]="'active'">
+                Wallet
+              </button>
+          </div>
+          <div class="buttons-details" fxLayout="row" fxLayoutAlign="end center">
+            <button mat-button class="button-prps prps-count button-reset" fxLayoutAlign="center center">
+              <span class="num">
+                800
+              </span>
+              <span class="name">
+                PRPS
+              </span>
+            </button>
+            <div class="user-details" fxLayoutAlign="end center">
+              <div class="user-name">
+                Stephen
+              </div>
+              <div class="user-photo">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>

@@ -1,0 +1,81 @@
+:host {
+  padding: 16px;
+  padding-bottom: 0;
+  padding-top: 0;
+  background: white;
+  display: block;
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  .brand {
+    font-size: 20px;
+    font-weight: 900;
+    margin-right: 20px;
+    .hash {
+      background: linear-gradient(to bottom, #f715ff 0%,#1cf0cb 100%);
+      display: inline-block;
+      vertical-align: middle;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 28px;
+    }
+  }
+  .button {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 18px 20px;
+    border-radius: 0;
+    letter-spacing: 1px;
+    color: #bbb;
+    &.active {
+      color: #333;
+      position: relative;
+      &:after {
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        bottom: 0;
+        content: '';
+        left: 0;
+        background: linear-gradient(to right, #f715ff 0%,#1cf0cb 100%);
+      }
+    }
+  }
+  .prps-count {
+    border-radius: 100px;
+    border: 2px solid #87b3ac;
+    padding: 3px 20px;
+    display: inline-block;
+    font-size: 15px;
+    .num {
+      font-weight: bold;
+      display: inline-block;
+      color: #87b3ac;
+    }
+    .name {
+      margin-left: 20px;
+      display: inline-block;
+      color: #999;
+    }
+  }
+  .user-details {
+    margin-left: 40px;
+    .user-name {
+      font-size: 16px;
+      letter-spacing: 1px;
+    }
+    .user-photo {
+      display: inline-block;
+      margin-left: 10px;
+      height: 40px;
+      width: 40px;
+      background: #ddd;
+      box-shadow: 0 0 12px #ddd;
+      border-radius: 100px;
+      background: url('/assets/Stephen.jpg');
+      background-size: cover;
+      background-position: center center;
+    }
+  }
+}

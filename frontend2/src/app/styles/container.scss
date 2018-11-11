@@ -1,0 +1,41 @@
+@import 'media';
+.container-xxl {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.container-xl {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.container-lg {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.container-md {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.container-sm {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.container-mobile-bump-8 {
+  margin-left: 8px;
+  margin-right: 8px;
+  @include gt(sm) {
+    margin: 0 auto;
+  }
+}
+
+.container-mobile-bump-16 {
+  margin-left: 16px;
+  margin-right: 16px;
+  @include gt(sm) {
+    margin: 0 auto;
+  }
+}
