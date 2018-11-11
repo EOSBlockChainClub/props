@@ -118,18 +118,36 @@ void token::transfer(account_name from,
     add_balance(to, quantity, from);
 }
 
-void token::createhash(string hashtag, asset quantity)
+void token::createhash(account_name from, string hashtag, asset quantity)
 {
+    require_auth(from);
+
     hash_table _hashtags(_self, _self);
 
-    auto itr = _hashtags.find(hashStr(hashtag));
+    auto itr = _hashtags.find(from);
 
-    eosio_assert(itr == _hashtags.end(), "This hashtag already exists.");
-
-    _hashtags.emplace(_self, [&](auto &a) {
-        a.hashtag_hash = hashStr(hashtag);
-        a.balance = quantity;
-    });
+    if (itr == _hashtags.end())
+    {
+        _hashtags.emplace(_self, [&](auto &a) {
+            a.owner = from;
+            a.hashtags.push_back({hashtag, quantity});
+        });
+    }
+    else
+    {
+        _hashtags.modify(itr, from, [&](auto &a) {
+            a.owner = from;
+            if (in_array(a.hashtags, hashtag))
+            {
+                auto hashparams = replace_balance(a.hashtags, hashtag, quantity);
+                a.hashtags = hashparams;
+            }
+            else
+            {
+                a.hashtags.push_back({hashtag, quantity});
+            }
+        });
+    }
 }
 
 // sets per transaction limit
@@ -200,7 +218,7 @@ void token::checklog(account_name from, asset quantity, asset dailyval)
         auto current_time = now();
         auto last_timestamp = log_itr->timestamp;
 
-        eosio_assert(!(current_time - last_timestamp < 86400 && dailyval.amount < quantity.amount), "you have already acheived your daily transaction limit.");
+        eosio_assert(current_time - last_timestamp < 86400 && dailyval.amount < quantity.amount, "you have already acheived your daily transaction limit.");
         _logs.modify(log_itr, from, [&](auto &a) {
             a.from = from;
             a.quantity += quantity;
@@ -212,13 +230,23 @@ void token::checklog(account_name from, asset quantity, asset dailyval)
 void token::propup(account_name from, account_name to, string hashtag)
 {
     require_auth(from);
-
+    asset quantity;
     asset dailyval = asset(10000, symbol_type(S(4, PROP)));
     hash_table _hashtags(_self, _self);
-    auto itr = _hashtags.find(hashStr(hashtag));
-    eosio_assert(itr != _hashtags.end(), "This hashtag is not registered by any user.");
-
-    auto quantity = itr->balance;
+    auto sender_itr = _hashtags.find(from);
+    auto reciever_itr = _hashtags.find(to);
+    if (in_array(sender_itr->hashtags, hashtag) && in_array(reciever_itr->hashtags, hashtag))
+    {
+        quantity = find_balance_by_hash(sender_itr->hashtags, hashtag);
+    }
+    else if (in_array(sender_itr->hashtags, hashtag))
+    {
+        quantity = find_balance_by_hash(sender_itr->hashtags, hashtag);
+    }
+    else
+    {
+        quantity = find_balance_by_hash(reciever_itr->hashtags, hashtag);
+    }
 
     trx_limit _limit(_self, _self);
     auto limit_itr = _limit.find(from);
@@ -239,7 +267,7 @@ void token::propup(account_name from, account_name to, string hashtag)
     token::checklog(from, quantity, dailyval);
 
     token::transfer(from, to, quantity, "transfer the hashtag ammount");
-}
+} // namespace eosio
 
 // eosio.token standard sub_balance function
 void token::sub_balance(account_name owner, asset value)
@@ -256,26 +284,6 @@ void token::sub_balance(account_name owner, asset value)
     else
     {
         from_acnts.modify(from, owner, [&](auto &a) {
-            a.balance -= value;
-        });
-    }
-}
-
-// It is used by transfer_from account to specify the RAM payer as the "sender" account and not the "owner" account as in the sub_balance function
-void token::sub_balance_from(account_name sender, account_name owner, asset value)
-{
-    accounts from_acnts(_self, owner);
-
-    const auto &from = from_acnts.get(value.symbol.name(), "no balance object found");
-    eosio_assert(from.balance.amount >= value.amount, "overdrawn balance");
-
-    if (from.balance.amount == value.amount)
-    {
-        from_acnts.erase(from);
-    }
-    else
-    {
-        from_acnts.modify(from, sender, [&](auto &a) {
             a.balance -= value;
         });
     }

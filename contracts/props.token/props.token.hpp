@@ -5,10 +5,12 @@
  */
 #pragma once
 
+#include <map>
+#include <vector>
+#include <algorithm>
+#include <string>
 #include <eosiolib/asset.hpp>
 #include <eosiolib/eosio.hpp>
-
-#include <string>
 
 namespace eosiosystem
 {
@@ -41,7 +43,7 @@ class token : public contract
 
       void propup(account_name from, account_name to, string hashtag);
 
-      void createhash(string hashtag, asset quantity);
+      void createhash(account_name from, string hashtag, asset quantity);
 
       void settrxlimit(account_name from, asset quantity);
 
@@ -51,11 +53,13 @@ class token : public contract
 
       inline asset get_balance(account_name owner, symbol_name sym) const;
 
-      inline asset allowance_of(account_name from, account_name to);
+      struct args
+      {
+            string name;
+            asset value;
+      };
 
     private:
-      inline void set_allowance(account_name from, account_name to, asset quantity, bool increment = false);
-
       //@abi table accounts i64
       struct account
       {
@@ -73,23 +77,12 @@ class token : public contract
             uint64_t primary_key() const { return supply.symbol.name(); }
       };
 
-      //@abi table allowances i64
-      struct allowance
-      {
-            account_name to;
-            asset quantity;
-
-            uint64_t primary_key() const { return to; }
-
-            EOSLIB_SERIALIZE(allowance, (to)(quantity))
-      };
-
       //@abi table hashes i64
       struct hashtag
       {
-            uint64_t hashtag_hash;
-            asset balance;
-            auto primary_key() const { return hashtag_hash; }
+            account_name owner;
+            vector<token::args> hashtags;
+            auto primary_key() const { return owner; }
       };
 
       //@abi table limits i64
@@ -127,7 +120,6 @@ class token : public contract
       typedef eosio::multi_index<N(dailylimits), dailylimit> daily_limit;
 
       void sub_balance(account_name owner, asset value);
-      void sub_balance_from(account_name sender, account_name owner, asset value);
       void add_balance(account_name owner, asset value, account_name ram_payer);
 
     public:
@@ -139,6 +131,18 @@ class token : public contract
             string memo;
       };
 }; // namespace eosio
+
+auto replace_balance(vector<token::args> params, string hashtag, asset quantity)
+{
+      for (int i = 0; i < params.size(); i++)
+      {
+            if (params[i].name == hashtag)
+            {
+                  params[i].value = quantity;
+            }
+      }
+      return params;
+}
 
 asset token::get_supply(symbol_name sym) const
 {
@@ -152,6 +156,30 @@ asset token::get_balance(account_name owner, symbol_name sym) const
       accounts accountstable(_self, owner);
       const auto &ac = accountstable.get(sym);
       return ac.balance;
+}
+
+auto find_balance_by_hash(vector<token::args> params, string hashtag)
+{
+      for (int i = 0; i < params.size(); i++)
+      {
+            if (params[i].name == hashtag)
+            {
+                  return params[i].value;
+            }
+      }
+}
+
+//helper function to find if a value exists in an array of type string
+bool in_array(vector<token::args> params, string hashtag)
+{
+      for (int i = 0; i < params.size(); i++)
+      {
+            if (params[i].name == hashtag)
+            {
+                  return true;
+            }
+      }
+      return false;
 }
 
 uint64_t hashStr(const string &strkey)
