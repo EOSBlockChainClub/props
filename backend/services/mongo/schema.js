@@ -61,9 +61,9 @@ const TransactonSchema = new BaseSchema({
 
 // Add schema to mongoose instance
 const User = mongoose.model('User', UserSchema, 'users');
-const Transacton = mongoose.model('Transacton', TransactonSchema, 'tranactions');
+const Transaction = mongoose.model('Transaction', TransactonSchema, 'transactions');
 
 export default {
   User,
-  Transacton
+  Transaction
 };
