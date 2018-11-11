@@ -31,15 +31,23 @@ const settings = require('./env.json');
     }
 
     type Transaction {
-        dateTime: String,
-        fromAccount: String,
-        toAccount: String,
+        _id: String
+        userId: String
+        action: String
+        actionDatetime: String
+        dateTime: String
+        platform: String
+        fromAccount: String
+        toAccount: String
+        hashtag: String
         amount: Int
+        metadata: String
     }
 
     type Query {
       searchTweets (searchString:String, twitterName:String, count:Int) : String
       processTwitterTransfers (searchString:String, twitterName:String, count:Int) : Result
+      transactions: [Transaction]
       users: [User]
     }
   `;
@@ -52,6 +60,7 @@ const settings = require('./env.json');
       // getTwitterData: (_, args, context) => { return getTwitterData(args, context); },
       processTwitterTransfers: (_, args, context) => { return processTwitterTransfers(args, context); },
       // users: () => users,
+      transactions: (_, args, context) => { return findMongo(args, context, Mongo.Transaction); },
       users: (_, args, context) => { return findMongo(args, context, Mongo.User); },
     },
   };
