@@ -42,7 +42,7 @@ const UserSchema = new BaseSchema({
   hashtags: [{
     name: { type: String},
     amount: { type: Number},
-    platforms:  { type: Number}
+    platforms:  { type: String}
   }]
 });
 

@@ -5,30 +5,6 @@ import { connect } from './services/mongo/connectors';
 const { ApolloServer, gql } = require('apollo-server');
 const settings = require('./env.json');
 
-  // This is a (sample) collection of books we'll be able to query
-  // the GraphQL server for.  A more complete example might fetch
-  // from an existing data source like a REST API or database.
-  const users = [
-    {
-      _id:'123456',
-      name: 'Tray Lewin',
-      transactions: [
-        {
-
-        }
-      ],
-      twitterName: 'oretest1',
-      twitterId: '1033845090907697152',
-      googleName: 'traylewin',
-      facebookName: 'tray.lewin',
-      hashtags: [
-          {name: "HeckYeah", amount: 50},
-          {name: "MuchLove", amount: 100},
-          {name: "Atomic", amount: 500}
-      ]
-    }
-  ];
-
   // Type definitions define the "shape" of your data and specify
   // which ways the data can be fetched from the GraphQL server.
   const typeDefs = gql`
@@ -43,7 +19,8 @@ const settings = require('./env.json');
 
     type Hashtag {
         name: String,
-        amount: Int
+        amount: Int,
+        platforms: String
     }
 
     type Result {
