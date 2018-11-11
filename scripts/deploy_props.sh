@@ -97,8 +97,8 @@
 		echo "-----> Step 2b - install eosio.token and eosio.msig contracts".
 		echo
 	    #install our standard token contract to be used as eosio.token
-		$cleos set contract eosio.token $proppath/build/contracts/eosio.token
-		$cleos set contract eosio.msig  $proppath/build/contracts/eosio.msig
+		$cleos set contract eosio.token $eospath/build/contracts/eosio.token
+		$cleos set contract eosio.msig  $eospath/build/contracts/eosio.msig
 		echo
 		echo "-----> Step 2c - initial funding of SYS for chain".
 		echo
@@ -108,7 +108,7 @@
 		echo "-----> Step 2d - set system contract".
 		echo
 		sleep 2  #delay to let transactions complete
-		$cleos set contract eosio $proppath/build/contracts/eosio.system
+		$cleos set contract eosio $eospath/build/contracts/eosio.system
 		sleep 2  #delay to let transactions complete
 	}
 
@@ -146,8 +146,8 @@
         $cleos push action eosio.token transfer '["eosio", "token.props", "20000000.0000 SYS", "initial funding of token.props"]' -p eosio
 
 		# create test accounts
-		createAccount props test1.props EOS6tg5CSgEfmRq4jDAFVYwRTCBSGdPg4Y8FhTAVxpg7RuQxUprYo EOS4xJvy2tYU21reKbbq4RPLxgzxNmrLtidVWpio5Ggwisfkgzg2L 1 1 1 8
-		createAccount props test2.props EOS7WyU91Fu5nUJXDyZSMNUbNvTMWyY4iYQiXKrHjJf9g5V8dp7CS EOS8UGzRNqjq7AZDbY2a7cBDaLYhPKW66LhjbwpkpyYcVYxoi9dGv 1 1 1 8
+		createAccount props user1.props EOS6tg5CSgEfmRq4jDAFVYwRTCBSGdPg4Y8FhTAVxpg7RuQxUprYo EOS4xJvy2tYU21reKbbq4RPLxgzxNmrLtidVWpio5Ggwisfkgzg2L 1 1 1 8
+		createAccount props user2.props EOS7WyU91Fu5nUJXDyZSMNUbNvTMWyY4iYQiXKrHjJf9g5V8dp7CS EOS8UGzRNqjq7AZDbY2a7cBDaLYhPKW66LhjbwpkpyYcVYxoi9dGv 1 1 1 8
 
 		#fund the master accounts so they can create other accounts
 
@@ -157,4 +157,5 @@
         # fund the contracts with cpu
         $cleos push action token.props create '["token.props", "100000000.0000 PROP", "create PROP"]' -p token.props
         $cleos push action token.props issue '["token.props", "10000000.0000 PROP","issue PROP"]' -p token.props
-        $cleos push action token.props transfer '["token.props", "test1.props", "10.0000 PROP","transfer PROP"]' -p token.props
+        $cleos push action token.props transfer '["token.props", "user1.props", "10.0000 PROP","transfer PROP"]' -p token.props
+		$cleos push action token.props transfer '["token.props", "user2.props", "10.0000 PROP","transfer PROP"]' -p token.props

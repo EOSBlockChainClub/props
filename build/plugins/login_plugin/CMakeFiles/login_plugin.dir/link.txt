@@ -1,2 +1,0 @@
-/usr/bin/ar qc liblogin_plugin.a  CMakeFiles/login_plugin.dir/login_plugin.cpp.o
-/usr/bin/ranlib liblogin_plugin.a
